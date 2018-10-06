@@ -52,7 +52,7 @@ function Clip(container) {
     }
 
 
-    limit(context.time, context.duration);
+    context.time = Math.min(context.time , context.duration);
     actions.forEach(function (action) {
       action.time = context.time;
     })
