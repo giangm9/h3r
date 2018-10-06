@@ -1,0 +1,30 @@
+{
+  "name": "h3r",
+  "version": "1.0.0",
+  "description": "Hmi's 3D renderer",
+  "main": "index.js",
+  "scripts": {
+
+
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/giangm9/h3r.git"
+  },
+  "keywords": [
+    "3d",
+    "threejs"
+  ],
+  "author": "GiangM9",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/giangm9/h3r/issues"
+  },
+  "homepage": "https://github.com/giangm9/h3r#readme",
+  "dependencies": {
+    "webpack": "^4.19.0"
+  },
+  "devDependencies": {
+    "uglifyjs-webpack-plugin": "^1.2.6"
+  }
+}
