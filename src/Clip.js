@@ -20,10 +20,16 @@ function Clip(container) {
   /** PUBLIC ATTRS/METHODS */
   var context = this;
   this.duration  = 0;
-  this.time      = 0;
+  this.getTime   = () =>  { return _time };
+  this.setTime   = (time) => {
+    _time = time; 
+    audio.pause();
+    audio.currentTime = time; 
+    audio.play();
+  }
   this.state     = 'pause' // play
-  this.play      = () => context.state = 'play';
-  this.pause     = () => context.state = 'pause';
+  this.play      = play;
+  this.pause     = pause;
   this.toggle    = () =>  { context.state == 'pause' ? play() : pause(); }
   this.appendH3R = appendH3R;
 
@@ -38,6 +44,8 @@ function Clip(container) {
   actions   = [],
   mixers    = [],
   controls  = null,
+  audio     = null,
+  _time      = 0,
   progress  = new Progress;
 
   /** PRIVATE FUNCTIONS */
@@ -48,14 +56,15 @@ function Clip(container) {
       mixers.forEach((mixer) => { mixer.update(0); });
 
     if (context.state == "play") {
-      context.time += delta;
+      _time += delta;
     }
 
 
-    context.time = Math.min(context.time , context.duration);
+    _time = Math.min(_time , context.duration);
     actions.forEach(function (action) {
-      action.time = context.time;
+      action.time = _time;
     })
+
     controls.update();
     renderer.render(scene, camera);
   }
@@ -113,10 +122,18 @@ function Clip(container) {
       if (this.readyState == 4 && this.status == 200) {
         var serverResponse = this.responseText;
         var h3r = JSON.parse(serverResponse);
+        
+        /** gltf */
         progress.needDone = h3r.gltf.length;
         h3r.gltf.forEach(function (gltf) {
           appendGLTF(gltf);
         });
+
+        /** audio */
+        if (h3r.bgm) {
+          audio = new Audio(h3r.bgm);
+        }
+        console.log(audio);
       }
     }
 
@@ -127,10 +144,14 @@ function Clip(container) {
 
   function play() {
     context.state = "play";
+    audio && audio.play();
+    console.log(audio)
   }
 
   function pause(){
     context.state = "pause";
+
+    audio && audio.pause();
   }
 
   /** CONSTRUCTION **/
@@ -140,6 +161,7 @@ function Clip(container) {
   scene.add(new THREE.HemisphereLight(0xffffbb, 0x080820, 2));
   window.addEventListener('resize', onWindowResize, false);
   animate();
+  pause();
 
 }
 

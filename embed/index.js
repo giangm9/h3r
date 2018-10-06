@@ -52,8 +52,18 @@ window.addEventListener('mousedown', function (event) {
 });
 
 makePlay();
-requestAnimationFrame(updateProgress);
 
+
+setInterval(function () {
+  // method to be executed;
+  if (!clip) return;
+  var current = clip.getTime();
+  var percent = (current / clip.duration) * 100;
+  progress.style.width = percent + '%';
+
+  currentTime.textContent = formatTime(current);
+
+}, 333);
 playpauseBtn.addEventListener('click', togglePlay);
 // player.addEventListener('timeupdate', updateProgress);
 // player.addEventListener('volumechange', updateVolume);
@@ -108,16 +118,6 @@ function inRange(event) {
   return true;
 }
 
-function updateProgress() {
-  requestAnimationFrame(updateProgress);
-  if (!clip) return;
-  var current = clip.time;
-  var percent = (current / clip.duration) * 100;
-  progress.style.width = percent + '%';
-
-  currentTime.textContent = formatTime(current);
-}
-
 function updateVolume() {
   volumeProgress.style.height = player.volume * 100 + '%';
   if (player.volume >= 0.5) {
@@ -162,16 +162,14 @@ function getCoefficient(event) {
 }
 
 function rewind(event) {
-
   if (inRange(event)) {
-    // player.currentTime = player.duration * getCoefficient(event);
-    clip.time = clip.duration * getCoefficient(event);
+    clip.setTime(clip.duration * getCoefficient(event));
   }
 }
 
 function changeVolume(event) {
   if (inRange(event)) {
-    player.volume = getCoefficient(event);
+    clip.volume = getCoefficient(event);
   }
 }
 
