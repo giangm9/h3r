@@ -1,1 +1,1 @@
-webpack --config webpack.dev.js
+webpack --config configs/webpack.dev.js
